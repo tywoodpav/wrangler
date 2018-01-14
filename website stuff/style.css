@@ -1,0 +1,51 @@
+body{
+  background-image: url("barnyard.jpeg");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+}
+  h1 {
+    font-family: 'Gloria Hallelujah', cursive;
+  }
+  h2 {
+    font-family: 'Short Stack', cursive;
+  }
+  p {
+    font-family: 'Short Stack', cursive;
+  }
+  div.container {
+    width: 100%;
+    border: 1px solid white;
+    background-color: green;
+    text-align: center;
+    /*color: white;*/
+  }
+    article {
+    /*background-image: url("thicshit.jpg");*/
+    padding: 1em;
+    color: green;
+  }
+    footer {
+    padding: 1em;
+    color: green;
+    background-color: lightgrey;
+    clear: left;
+    text-align: center;
+  }
+#header{
+  /*background-image : url("thicshit.jpg");
+  background-repeat: no-repeat;*/
+  background-position: center;
+  background-size: cover;
+  float: left;
+  text-align: center;
+  padding: 40px;
+  margin: 30px;
+  width: calc(50% - 110px);
+  border-radius: 20px;
+  background-color: rgba(255,255,255,0.85);
+}
+
+#welcome {
+  width: 100%;
+}

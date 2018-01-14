@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<!-- Huge shoutout to Pete from the government for his help on this project.
+Pete was a mentor and a motivator through and through and we probably could
+not have finished this without his help. 5th floor baby lez go wranlgersn -->
+
+
+
+<html lang="en">
+<head>
+  <link href="https://fonts.googleapis.com/css?family=Gloria+Hallelujah|Short+Stack" rel="stylesheet">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Wrangler</title>
+  <style>
+    #map{
+      height: calc(100vh - 130px);
+      width: calc(50% - 110px);
+      float: right;
+      border-style: solid;
+      border-width: 10px;
+      margin: 30px;
+      border-radius: 20px;
+      overflow: hidden;
+    }
+  </style>
+  <link rel="stylesheet" type = "text/css" href="style.css" />
+</head>
+
+<body id = "body">
+  <center>
+  <div id="header">
+  <header>
+    <div id = "blink">
+     <img src = "bestwordsleeching.png" id="welcome">
+   </div>
+
+  </header>
+
+  &nbsp;
+
+</div>
+</center>
+
+  <div id="map"></div>
+
+  <script>
+    var map = null;
+    //var image = "cowy.png";
+    var cows = {};
+    var cow_ids = "";
+    var db = "********";
+    function initMap(){
+      //console.log("here");
+      var markers = {};
+      var tucson = {lat: 32.2319, lng: -110.9501};
+      var options = {
+        zoom:15, //17
+        center:tucson
+      };
+      map = new google.maps.Map(document.getElementById('map'), options);
+      /*var marker = new google.maps.Marker({
+        position : tucson,
+        animation: google.maps.Animation.BOUNCE,
+        icon : image,
+        map: map
+      })*/
+      var fence_coords = [
+        {lat : 32.236016,lng: -110.959502},
+        {lat : 32.236070, lng : -110.943994},
+        {lat : 32.227844, lng: -110.943874},
+        {lat : 32.227734, lng : -110.959462},
+        {lat : 32.236016,lng: -110.959502}
+      ]
+      var fence = new google.maps.Polygon({
+          paths : fence_coords,
+          strokeColor : '#b36b00',
+          strokeOpacity : 0.8,
+          strokeWeight : 3,
+          fillColor : '#33ff33',
+          fillOpacity : .3,
+          map : map,
+          draggable : true
+          //editable : true
+      })
+      //getAjaxSkele();
+      //setInterval(fetchBarnYard, 5000);
+      setInterval(getAjaxSkele, 5000);
+    }
+    function getAjaxSkele(){
+      getAjax(db, function(data){
+        var json = JSON.parse(data);
+        console.log(json.cows);
+        new_cows = updateCows(json.cows);
+        //fences = updateFences(fences);
+        cows = updateMap(new_cows, cows);
+        //cows = parseJSON(json);
+      });
+    }
+    function parseJSON(data){
+
+    }
+    function getAjax(url, success){
+      var xhr = window.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP');
+      xhr.open('GET', url);
+      xhr.onreadystatechange = function() {
+        if (xhr.readyState>3 && xhr.status==200) success(xhr.responseText);
+      };
+      //xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+      xhr.send();
+      return xhr;
+    }
+    function fetchBarnYard(){
+
+
+      var new_cows = [{
+        "id": "co1234",
+        "name": "Bessy",
+        "location":  {
+          "type": "POINT",
+          "geometry": [-110.9501, 32.2319]
+        }
+      },
+      {
+        "fence": "fe1234",
+
+        "id": "co1234",
+        "name": "Bessy",
+        "location":  {
+          "type": "POINT",
+          "geometry": [-110.9501, 32.2319]
+        },
+        "fence": "fe1234"
+
+      }]
+      var fences = {
+        "id": "fe1234",
+        "name": "UofA Farm",
+        "geography": {
+          "type": "POLYGON",
+          "geometry": [[
+            [-122.2, 32.3],
+            [-122.2, 32.3],
+            [-122.2, 32.3],
+            [-122.2, 32.3],
+            [-122.2, 32.3],
+          ]]
+        }
+      }
+    new_cows = updateCows(new_cows);
+    //fences = updateFences(fences);
+    cows = updateMap(new_cows, cows, fences);
+
+  }
+    function updateMap(new_cows, cows){
+      //console.log("map", map);
+      //console.log("cows length", cows.length);
+      for (var i = 0; i<cows.length;i++){
+        if (cows[i].hasOwnProperty("marker")){
+        cows[i].marker.setMap(null);
+        }
+      }
+
+      cows = new_cows;
+      //console.log(cows);
+      return cows;
+    }
+    function updateCows(cows){
+    //  console.log("here");
+      var out = false;
+      //cows.forEach(updateCow)
+    //  console.log(cows.length);
+      for (var i = 0; i < cows.length;i++){
+        //console.log
+        if (! cow_ids.includes(cows[i].id)){
+          cow_ids += cows[i].id;
+        }
+        var cow_loc = {
+            lng: cows[i].location.coordinates[0],
+           lat: cows[i].location.coordinates[1]
+         }
+
+         console.log(cows[i].type);
+        if(cows[i].type === "cow"){
+          var image = "cowy.png";
+        } else if (cows[i].type === "chicken"){
+          var image = "chicky.png";
+        } else if (cows[i].type == 'pig'){
+          var image = "pigy.png";
+        } else if (cows[i].type === 'sheep'){
+          var image = "sheepy.png";
+        }
+
+        if (cows[i].active){
+        cows[i].marker = new google.maps.Marker({
+          position : cow_loc,
+
+          animation: google.maps.Animation.BOUNCE,
+          icon : image,
+          map: map,
+          title : cows[i].name
+        })
+      } else {
+        cows[i].marker = new google.maps.Marker({
+          position : cow_loc,
+          icon : image,
+          map: map,
+          title : cows[i].name
+        })
+      }
+      }
+      return cows;
+    }
+  </script>
+  <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key***************">
+    </script>
+</body>
+</div>
+</html>
